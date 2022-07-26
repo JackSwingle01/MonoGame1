@@ -11,6 +11,7 @@ namespace MonoGame1
         public float scale = .44444f; //not sure why this value, I got it online 
 
         Texture2D face;
+        Texture2D grassBackground;
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
@@ -34,7 +35,8 @@ namespace MonoGame1
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            face = Content.Load<Texture2D>("LaughCryFaceSprite");
+            face = Content.Load<Texture2D>("Images/Sprites/LaughCryFaceSprite");
+            grassBackground = Content.Load<Texture2D>("Images/backgrounds/grass");
 
             _renderTarget = new RenderTarget2D(GraphicsDevice, 1920, 1080);
 
@@ -61,6 +63,7 @@ namespace MonoGame1
 
             _spriteBatch.Begin();
             //put sprites to render here
+            _spriteBatch.Draw(grassBackground, Vector2.Zero, Color.White);
             _spriteBatch.Draw(face, Vector2.Zero, Color.White);
             _spriteBatch.End();
 

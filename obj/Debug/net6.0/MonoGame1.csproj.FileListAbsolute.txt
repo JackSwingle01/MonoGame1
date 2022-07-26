@@ -23,4 +23,5 @@ C:\aCode\Experimental\MonoGame1\obj\Debug\net6.0\refint\MonoGame1.dll
 C:\aCode\Experimental\MonoGame1\obj\Debug\net6.0\MonoGame1.pdb
 C:\aCode\Experimental\MonoGame1\obj\Debug\net6.0\MonoGame1.genruntimeconfig.cache
 C:\aCode\Experimental\MonoGame1\obj\Debug\net6.0\ref\MonoGame1.dll
-C:\aCode\Experimental\MonoGame1\bin\Debug\net6.0\Content\LaughCryFaceSprite.xnb
+C:\aCode\Experimental\MonoGame1\bin\Debug\net6.0\Content\Images\Backgrounds\grass.xnb
+C:\aCode\Experimental\MonoGame1\bin\Debug\net6.0\Content\Images\Sprites\LaughCryFaceSprite.xnb
