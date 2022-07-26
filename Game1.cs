@@ -10,8 +10,14 @@ namespace MonoGame1
         //for game scale
         public float scale = .44444f; //not sure why this value, I got it online 
 
-        Texture2D face;
+        //textures
+        Texture2D playerSprite;
         Texture2D grassBackground;
+
+        Vector2 playerPos; //player position
+
+        public float deltaTime; //time elapsed each update
+        
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
@@ -21,7 +27,10 @@ namespace MonoGame1
 
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
+            
+            //sets time step to 60fps - non frame rate dependent 
+            TargetElapsedTime = TimeSpan.FromSeconds(1.0 / 60.0f);
+            IsFixedTimeStep = true;
 
             base.Initialize();
 
@@ -35,10 +44,12 @@ namespace MonoGame1
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            face = Content.Load<Texture2D>("Images/Sprites/LaughCryFaceSprite");
+            playerSprite = Content.Load<Texture2D>("Images/Sprites/tiger");
             grassBackground = Content.Load<Texture2D>("Images/backgrounds/grass");
 
             _renderTarget = new RenderTarget2D(GraphicsDevice, 1920, 1080);
+
+            playerPos = new Vector2((_renderTarget.Width / 2) - (playerSprite.Width / 2), (_renderTarget.Height / 2) - (playerSprite.Height / 2));
 
         }
 
@@ -46,8 +57,10 @@ namespace MonoGame1
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
-
-            // TODO: Add your update logic here
+            //^^^ is default code, not sure if I should delete
+         
+            deltaTime = gameTime.ElapsedGameTime.Milliseconds; //calculates time elapsed
+            float movementSpeed = deltaTime / 2.38f; //movement speed not dependent on framerate
 
             base.Update(gameTime);
         }
@@ -64,7 +77,7 @@ namespace MonoGame1
             _spriteBatch.Begin();
             //put sprites to render here
             _spriteBatch.Draw(grassBackground, Vector2.Zero, Color.White);
-            _spriteBatch.Draw(face, Vector2.Zero, Color.White);
+            _spriteBatch.Draw(playerSprite, playerPos, Color.White);
             _spriteBatch.End();
 
             GraphicsDevice.SetRenderTarget(null);
