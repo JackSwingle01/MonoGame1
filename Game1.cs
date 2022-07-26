@@ -5,7 +5,12 @@ namespace MonoGame1
     {
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
+        private RenderTarget2D _renderTarget;
 
+        //for game scale
+        public float scale = .44444f; //not sure why this value, I got it online 
+
+        Texture2D face;
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
@@ -18,13 +23,21 @@ namespace MonoGame1
             // TODO: Add your initialization logic here
 
             base.Initialize();
+
+            _graphics.PreferredBackBufferWidth = 1280;
+            _graphics.PreferredBackBufferHeight = 720;
+
+            _graphics.ApplyChanges();
         }
 
         protected override void LoadContent()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            // TODO: use this.Content to load your game content here
+            face = Content.Load<Texture2D>("LaughCryFaceSprite");
+
+            _renderTarget = new RenderTarget2D(GraphicsDevice, 1920, 1080);
+
         }
 
         protected override void Update(GameTime gameTime)
@@ -39,9 +52,25 @@ namespace MonoGame1
 
         protected override void Draw(GameTime gameTime)
         {
+            //set the res scale
+            scale = 1F / (1080f / _graphics.GraphicsDevice.Viewport.Height);
+           
+
+            GraphicsDevice.SetRenderTarget(_renderTarget);
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            // TODO: Add your drawing code here
+            _spriteBatch.Begin();
+            //put sprites to render here
+            _spriteBatch.Draw(face, Vector2.Zero, Color.White);
+            _spriteBatch.End();
+
+            GraphicsDevice.SetRenderTarget(null);
+            GraphicsDevice.Clear(Color.CornflowerBlue);
+            //this scales the sprites for given resolution
+            _spriteBatch.Begin();
+            _spriteBatch.Draw(_renderTarget, Vector2.Zero, null, Color.White, 0f, Vector2.Zero, scale, SpriteEffects.None, 0f);
+            _spriteBatch.End();
+            //dont add stuff here ^
 
             base.Draw(gameTime);
         }
