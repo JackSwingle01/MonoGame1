@@ -16,11 +16,13 @@ namespace MonoGame1
 
         Vector2 playerPos; //player position
 
+        
         public float deltaTime; //time elapsed each update
         public Vector2 acceleration;
         public Vector2 velocity;
         public Vector2 deltaPos;
-        
+        public Vector2 gravity;
+
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
@@ -53,7 +55,7 @@ namespace MonoGame1
             _renderTarget = new RenderTarget2D(GraphicsDevice, 1920, 1080); 
 
             playerPos = new Vector2((_renderTarget.Width / 2) - (playerSprite.Width / 2), (_renderTarget.Height / 2) - (playerSprite.Height / 2)); //adds player in center
-            //acceleration = new Vector2(0, 0.01f); //gravity
+            gravity = new Vector2(0, 9.8f); //gravity
             velocity = Vector2.Zero;
         }
 
@@ -64,7 +66,7 @@ namespace MonoGame1
          
             deltaTime = (float)gameTime.ElapsedGameTime.Milliseconds; //calculates time elapsed
             System.Console.WriteLine(deltaTime);
-            float movementSpeed = .1f; //movement speed not dependent on framerate
+            float movementSpeed = 10f; //movement speed not dependent on framerate
             
             //get input direction
             Vector2 direction = Vector2.Zero;
@@ -73,21 +75,33 @@ namespace MonoGame1
             if (keyboardState.IsKeyDown(Keys.A)) { direction += new Vector2(-1.0f, 0); }
             if (keyboardState.IsKeyDown(Keys.D)) { direction += new Vector2(1.0f, 0); }
             
-            if (direction != Vector2.Zero) { direction.Normalize(); }
-            //why does this break it???
-            //direction.X = (float)(direction.X / direction.Length());
-            //direction.Y = (float)(direction.Y / direction.Length());
+            if (direction != Vector2.Zero) { direction.Normalize(); } //normalize direction 
+      
 
 
-            velocity = direction * movementSpeed;
-            //velocity = velocity + acceleration * deltaTime; //v = vi + a dt
-            if (playerPos.Y > (_renderTarget.Height - playerSprite.Height) || playerPos.Y < 0)
+            acceleration = gravity + (direction * movementSpeed); //vf = vi + a1 dt
+            velocity += acceleration * (deltaTime/1000); //v = vi + g dt
+
+            //border collision detection 
+            if (playerPos.Y > (_renderTarget.Height - playerSprite.Height))
             {
+                playerPos.Y = _renderTarget.Height - playerSprite.Height;
                 velocity.Y =  -velocity.Y * .75f; //Vector2.Zero;
             }
-            if (playerPos.X > (_renderTarget.Width - playerSprite.Width) || playerPos.X < 0)
+            if (playerPos.Y < 0)
             {
+                playerPos.Y = 0;
+                velocity.Y = -velocity.Y * .75f;
+            }
+            if (playerPos.X > (_renderTarget.Width - playerSprite.Width))
+            {
+                playerPos.X = _renderTarget.Width - playerSprite.Width;
                 velocity.X = -velocity.X * .75f; //Vector2.Zero;
+            }
+            if (playerPos.X < 0)
+            {
+                playerPos.X =0;
+                velocity.X = -velocity.X * .75f;
             }
             deltaPos = velocity * deltaTime; //dr = vt
             playerPos += deltaPos; //r = ri + dr 
