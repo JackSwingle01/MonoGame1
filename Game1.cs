@@ -64,7 +64,7 @@ namespace MonoGame1
          
             deltaTime = (float)gameTime.ElapsedGameTime.Milliseconds; //calculates time elapsed
             System.Console.WriteLine(deltaTime);
-            float movementSpeed = .02f; //movement speed not dependent on framerate
+            float movementSpeed = .1f; //movement speed not dependent on framerate
             
             //get input direction
             Vector2 direction = Vector2.Zero;
@@ -72,10 +72,15 @@ namespace MonoGame1
             if (keyboardState.IsKeyDown(Keys.S)) { direction += new Vector2(0, 1.0f); }
             if (keyboardState.IsKeyDown(Keys.A)) { direction += new Vector2(-1.0f, 0); }
             if (keyboardState.IsKeyDown(Keys.D)) { direction += new Vector2(1.0f, 0); }
-            direction = Vector2.Normalize(direction);
+            
+            if (direction != Vector2.Zero) { direction.Normalize(); }
+            //why does this break it???
+            //direction.X = (float)(direction.X / direction.Length());
+            //direction.Y = (float)(direction.Y / direction.Length());
 
-            velocity = velocity + direction * movementSpeed;
-            velocity = velocity + acceleration * deltaTime; //v = vi + a dt
+
+            velocity = direction * movementSpeed;
+            //velocity = velocity + acceleration * deltaTime; //v = vi + a dt
             if (playerPos.Y > (_renderTarget.Height - playerSprite.Height) || playerPos.Y < 0)
             {
                 velocity.Y =  -velocity.Y * .75f; //Vector2.Zero;
