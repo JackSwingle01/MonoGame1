@@ -17,6 +17,9 @@ namespace MonoGame1
         Vector2 playerPos; //player position
 
         public float deltaTime; //time elapsed each update
+        public Vector2 acceleration;
+        public Vector2 velocity;
+        public Vector2 deltaPos;
         
         public Game1()
         {
@@ -47,20 +50,42 @@ namespace MonoGame1
             playerSprite = Content.Load<Texture2D>("Images/Sprites/tiger");
             grassBackground = Content.Load<Texture2D>("Images/backgrounds/grass");
 
-            _renderTarget = new RenderTarget2D(GraphicsDevice, 1920, 1080);
+            _renderTarget = new RenderTarget2D(GraphicsDevice, 1920, 1080); 
 
-            playerPos = new Vector2((_renderTarget.Width / 2) - (playerSprite.Width / 2), (_renderTarget.Height / 2) - (playerSprite.Height / 2));
-
+            playerPos = new Vector2((_renderTarget.Width / 2) - (playerSprite.Width / 2), (_renderTarget.Height / 2) - (playerSprite.Height / 2)); //adds player in center
+            //acceleration = new Vector2(0, 0.01f); //gravity
+            velocity = Vector2.Zero;
         }
 
         protected override void Update(GameTime gameTime)
         {
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
-                Exit();
-            //^^^ is default code, not sure if I should delete
+
+            KeyboardState keyboardState = Keyboard.GetState();
          
-            deltaTime = gameTime.ElapsedGameTime.Milliseconds; //calculates time elapsed
-            float movementSpeed = deltaTime / 2.38f; //movement speed not dependent on framerate
+            deltaTime = (float)gameTime.ElapsedGameTime.Milliseconds; //calculates time elapsed
+            System.Console.WriteLine(deltaTime);
+            float movementSpeed = .02f; //movement speed not dependent on framerate
+            
+            //get input direction
+            Vector2 direction = Vector2.Zero;
+            if (keyboardState.IsKeyDown(Keys.W)) { direction += new Vector2(0, -1.0f); }
+            if (keyboardState.IsKeyDown(Keys.S)) { direction += new Vector2(0, 1.0f); }
+            if (keyboardState.IsKeyDown(Keys.A)) { direction += new Vector2(-1.0f, 0); }
+            if (keyboardState.IsKeyDown(Keys.D)) { direction += new Vector2(1.0f, 0); }
+            direction = Vector2.Normalize(direction);
+
+            velocity = velocity + direction * movementSpeed;
+            velocity = velocity + acceleration * deltaTime; //v = vi + a dt
+            if (playerPos.Y > (_renderTarget.Height - playerSprite.Height) || playerPos.Y < 0)
+            {
+                velocity.Y =  -velocity.Y * .75f; //Vector2.Zero;
+            }
+            if (playerPos.X > (_renderTarget.Width - playerSprite.Width) || playerPos.X < 0)
+            {
+                velocity.X = -velocity.X * .75f; //Vector2.Zero;
+            }
+            deltaPos = velocity * deltaTime; //dr = vt
+            playerPos += deltaPos; //r = ri + dr 
 
             base.Update(gameTime);
         }
@@ -84,7 +109,7 @@ namespace MonoGame1
             GraphicsDevice.Clear(Color.CornflowerBlue);
             //this scales the sprites for given resolution
             _spriteBatch.Begin();
-            _spriteBatch.Draw(_renderTarget, Vector2.Zero, null, Color.White, 0f, Vector2.Zero, scale, SpriteEffects.None, 0f);
+            _spriteBatch.Draw(_renderTarget, Vector2.Zero, null, Color.White, 0f, Vector2.Zero, scale, SpriteEffects.None, 0f); //add scale to scale
             _spriteBatch.End();
             //dont add stuff here ^
 
