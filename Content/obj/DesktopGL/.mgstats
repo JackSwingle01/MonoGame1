@@ -1,3 +1,4 @@
 Source File,Dest File,Processor Type,Content Type,Source File Size,Dest File Size,Build Seconds
-"C:/aCode/Experimental/MonoGame1/Content/Images/Backgrounds/grass.png","C:/aCode/Experimental/MonoGame1/Content/bin/DesktopGL/Images/Backgrounds/grass.xnb","TextureProcessor","Texture2DContent",9060914,14745685,0.738398
-"C:/aCode/Experimental/MonoGame1/Content/Images/Sprites/tiger.png","C:/aCode/Experimental/MonoGame1/Content/bin/DesktopGL/Images/Sprites/tiger.xnb","TextureProcessor","Texture2DContent",56368,324085,0.0135669
+"C:/aCode/Experimental/MonoGame1/Content/Images/Backgrounds/grass.png","C:/aCode/Experimental/MonoGame1/Content/bin/DesktopGL/Images/Backgrounds/grass.xnb","TextureProcessor","Texture2DContent",9060914,14745685,0.9606641
+"C:/aCode/Experimental/MonoGame1/Content/Images/Sprites/redhead.png","C:/aCode/Experimental/MonoGame1/Content/bin/DesktopGL/Images/Sprites/redhead.xnb","TextureProcessor","Texture2DContent",19155,91285,0.0081953
+"C:/aCode/Experimental/MonoGame1/Content/Images/Sprites/tiger.png","C:/aCode/Experimental/MonoGame1/Content/bin/DesktopGL/Images/Sprites/tiger.xnb","TextureProcessor","Texture2DContent",56368,324085,0.0213288

@@ -1,17 +1,21 @@
-﻿
+﻿using MonoGame1.Source;
+using MonoGame1.Source.Engine;
+
 namespace MonoGame1
 {
     public class Game1 : Game
     {
         private GraphicsDeviceManager _graphics;
-        private SpriteBatch _spriteBatch;
+        //private SpriteBatch _spriteBatch;
         private RenderTarget2D _renderTarget;
+
+        public World world;
 
         //for game scale
         public float scale = .44444f; //not sure why this value, I got it online 
 
         //textures
-        Texture2D playerSprite;
+        Basic2D playerSprite;
         Texture2D grassBackground;
 
         Vector2 playerPos; //player position
@@ -21,7 +25,7 @@ namespace MonoGame1
         public Vector2 acceleration;
         public Vector2 velocity;
         public Vector2 deltaPos;
-        public Vector2 gravity;
+        //public Vector2 gravity;
 
         public Game1()
         {
@@ -47,27 +51,31 @@ namespace MonoGame1
 
         protected override void LoadContent()
         {
-            _spriteBatch = new SpriteBatch(GraphicsDevice);
+            
+            Globals.spriteBatch = new SpriteBatch(GraphicsDevice);
+            Globals.content = this.Content;
+            _renderTarget = new RenderTarget2D(GraphicsDevice, 1920, 1080);
+            scale = 1F / (1080f / _graphics.GraphicsDevice.Viewport.Height);
+   
 
-            playerSprite = Content.Load<Texture2D>("Images/Sprites/tiger");
-            grassBackground = Content.Load<Texture2D>("Images/backgrounds/grass");
+            world = new World();
 
-            _renderTarget = new RenderTarget2D(GraphicsDevice, 1920, 1080); 
+            //playerPos = new Vector2((_renderTarget.Width / 2) - (playerSprite.model.Width / 2), (_renderTarget.Height / 2) - (playerSprite.model.Height / 2)); //adds player in center
+            //playerSprite = new Basic2D("Images/Sprites/redhead", Vector2.Zero, Vector2.Zero);
+            //grassBackground = Content.Load<Texture2D>("Images/backgrounds/grass");
+            //velocity = Vector2.Zero;
 
-            playerPos = new Vector2((_renderTarget.Width / 2) - (playerSprite.Width / 2), (_renderTarget.Height / 2) - (playerSprite.Height / 2)); //adds player in center
-            gravity = new Vector2(0, 9.8f); //gravity
-            velocity = Vector2.Zero;
         }
 
         protected override void Update(GameTime gameTime)
         {
-
+            world.Update();
             KeyboardState keyboardState = Keyboard.GetState();
          
             deltaTime = (float)gameTime.ElapsedGameTime.Milliseconds; //calculates time elapsed
             System.Console.WriteLine(deltaTime);
-            float movementSpeed = 10f; //movement speed not dependent on framerate
-            
+            float movementSpeed = 50f; //movement speed not dependent on framerate //movement speed is px/second
+
             //get input direction
             Vector2 direction = Vector2.Zero;
             if (keyboardState.IsKeyDown(Keys.W)) { direction += new Vector2(0, -1.0f); }
@@ -76,16 +84,17 @@ namespace MonoGame1
             if (keyboardState.IsKeyDown(Keys.D)) { direction += new Vector2(1.0f, 0); }
             
             if (direction != Vector2.Zero) { direction.Normalize(); } //normalize direction 
-      
 
+            //acceleration = (direction * movementSpeed); // + gravity; //a = g + a0;
+            //velocity += acceleration * (deltaTime/1000); //v = vi + at;
 
-            acceleration = gravity + (direction * movementSpeed); //vf = vi + a1 dt
-            velocity += acceleration * (deltaTime/1000); //v = vi + g dt
+            velocity = (direction * movementSpeed) * (deltaTime / 1000); //movement speed is px/second
 
             //border collision detection 
-            if (playerPos.Y > (_renderTarget.Height - playerSprite.Height))
+            /*
+            if (playerPos.Y > (_renderTarget.Height - playerSprite.model.Height))
             {
-                playerPos.Y = _renderTarget.Height - playerSprite.Height;
+                playerPos.Y = _renderTarget.Height - playerSprite.model.Height;
                 velocity.Y =  -velocity.Y * .75f; //Vector2.Zero;
             }
             if (playerPos.Y < 0)
@@ -93,9 +102,9 @@ namespace MonoGame1
                 playerPos.Y = 0;
                 velocity.Y = -velocity.Y * .75f;
             }
-            if (playerPos.X > (_renderTarget.Width - playerSprite.Width))
+            if (playerPos.X > (_renderTarget.Width - playerSprite.model.Width))
             {
-                playerPos.X = _renderTarget.Width - playerSprite.Width;
+                playerPos.X = _renderTarget.Width - playerSprite.model.Width;
                 velocity.X = -velocity.X * .75f; //Vector2.Zero;
             }
             if (playerPos.X < 0)
@@ -105,31 +114,32 @@ namespace MonoGame1
             }
             deltaPos = velocity * deltaTime; //dr = vt
             playerPos += deltaPos; //r = ri + dr 
-
+            */
             base.Update(gameTime);
         }
 
         protected override void Draw(GameTime gameTime)
         {
             //set the res scale
-            scale = 1F / (1080f / _graphics.GraphicsDevice.Viewport.Height);
-           
+
+            
 
             GraphicsDevice.SetRenderTarget(_renderTarget);
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            _spriteBatch.Begin();
+            Globals.spriteBatch.Begin();
             //put sprites to render here
-            _spriteBatch.Draw(grassBackground, Vector2.Zero, Color.White);
-            _spriteBatch.Draw(playerSprite, playerPos, Color.White);
-            _spriteBatch.End();
+            world.Draw();
+            //Globals.spriteBatch.Draw(grassBackground, Vector2.Zero, Color.White);
+            //Globals.spriteBatch.Draw(playerSprite, playerPos, Color.White);
+            Globals.spriteBatch.End();
 
             GraphicsDevice.SetRenderTarget(null);
             GraphicsDevice.Clear(Color.CornflowerBlue);
             //this scales the sprites for given resolution
-            _spriteBatch.Begin();
-            _spriteBatch.Draw(_renderTarget, Vector2.Zero, null, Color.White, 0f, Vector2.Zero, scale, SpriteEffects.None, 0f); //add scale to scale
-            _spriteBatch.End();
+            Globals.spriteBatch.Begin();
+            Globals.spriteBatch.Draw(_renderTarget, Vector2.Zero, null, Color.White, 0f, Vector2.Zero, scale, SpriteEffects.None, 0f); //add scale to scale
+            Globals.spriteBatch.End();
             //dont add stuff here ^
 
             base.Draw(gameTime);

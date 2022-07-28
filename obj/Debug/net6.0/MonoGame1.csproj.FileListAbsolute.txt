@@ -25,3 +25,5 @@ C:\aCode\Experimental\MonoGame1\obj\Debug\net6.0\MonoGame1.genruntimeconfig.cach
 C:\aCode\Experimental\MonoGame1\obj\Debug\net6.0\ref\MonoGame1.dll
 C:\aCode\Experimental\MonoGame1\bin\Debug\net6.0\Content\Images\Backgrounds\grass.xnb
 C:\aCode\Experimental\MonoGame1\bin\Debug\net6.0\Content\Images\Sprites\tiger.xnb
+C:\aCode\Experimental\MonoGame1\bin\Debug\net6.0\Content\Images\Sprites\redhead.xnb
+C:\aCode\Experimental\MonoGame1\bin\Debug\net6.0\Content\Images\Sprites\redhead.png
